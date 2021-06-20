@@ -13,19 +13,19 @@ public class Box {
     private float price = 0;
 
     public Box(Fruit fruit) {
+
         this.fruitList.add(fruit);
+        this.weight += fruit.getWeight() * fruit.getQuantity();
     }
 
-    public Box() {}
+    public Box() {
+    }
 
     public List<Fruit> getFruitList() {
         return fruitList;
     }
 
     public float getWeight() {
-        for (Fruit fruit : fruitList) {
-            weight += fruit.getTotalWeight();
-        }
         return weight;
     }
 
@@ -36,11 +36,12 @@ public class Box {
         return price + PACKAGING_FEE;
     }
 
-    public void addFruit(Fruit fruit){
-     this.fruitList.add(fruit);
+    public void addFruit(Fruit fruit) {
+        this.fruitList.add(fruit);
+        this.weight += fruit.getWeight() * fruit.getQuantity();
     }
 
-    public boolean isNewBox(){
-        return this.fruitList.size() == 0;
+    public float getRemainingCapacity(){
+        return Box.MAX_WEIGHT - this.weight;
     }
 }

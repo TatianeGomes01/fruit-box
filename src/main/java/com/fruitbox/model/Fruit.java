@@ -1,23 +1,26 @@
 package com.fruitbox.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Cacheable(false)
 public class Fruit {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
     private float price;
     private float weight;
     private int quantity;
 
-    public Fruit(){}
+    @Transient
+    private int splitQtt = quantity;
 
-
+    public Fruit() {
+    }
 
     public Fruit(String type, float price, float weight, int quantity) {
         this.type = type;
@@ -39,7 +42,6 @@ public class Fruit {
     }
 
     public void setPrice(float price) {
-
         this.price = price;
     }
 
@@ -79,21 +81,39 @@ public class Fruit {
 
         int maxFruitQtt = (int) (maxWeight / weight);
 
+        if (maxFruitQtt > splitQtt) {
+            maxFruitQtt = splitQtt;
+        }
+
         return splitFruit(maxFruitQtt);
     }
 
-    private Fruit splitFruit(int quantity){
+    private Fruit splitFruit(int splitQtt) {
         Fruit splitFruit = new Fruit();
 
         splitFruit.id = this.id;
         splitFruit.type = this.type;
         splitFruit.price = this.price;
         splitFruit.weight = this.weight;
-        splitFruit.quantity = quantity;
+        splitFruit.quantity = splitQtt;
 
-        this.quantity -= quantity;
+        this.splitQtt = quantity - splitQtt;
 
         return splitFruit;
+    }
+
+    public List<Fruit> splitFruitByWeight(float weight) {
+
+        int numberOfBoxes = (int) Math.ceil(getTotalWeight() / weight);
+        List<Fruit> fruitSplitByWeight = new ArrayList<>();
+
+        splitQtt = quantity;
+
+        for (int i = 0; i < numberOfBoxes; i++) {
+            fruitSplitByWeight.add(getFruitQttByWeight(weight));
+        }
+
+        return fruitSplitByWeight;
     }
 }
 

@@ -1,0 +1,79 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <title>Title</title>
+    </head>
+
+
+    <h2>Available fruits</h2>
+    <div class="table-wrapper">
+
+        <table class="fl-table table">
+            <thead>
+            <tr scope="row">
+                <th scope="col">Type</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Unity Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fruit : ${fruitList}" scope="row">
+                <td scope="col" th:text="${fruit.Type}"></td>
+                <td scope="col" th:text="${fruit.Weight} + 'g'"></td>
+                <td scope="col" th:text="${fruit.Quantity}"></td>
+                <td scope="col" th:text="${#numbers.formatDecimal(fruit.Price,1,'COMMA', 2, 'POINT')} + '€'"></td>
+            </tr>
+            <tbody>
+        </table>
+        </div>
+
+
+    <h2>Box List</h2>
+    <div class="table-wrapper">
+        <table class="fl-table table">
+            <thead>
+            <tr>
+                <th scope="col">Box number</th>
+                <th scope="col">Type</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Total Fruit Price</th>
+                <th scope="col">Box weight</th>
+                <th scope="col">Box fee</th>
+                <th scope="col">Box price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="box, iter : ${boxList}" scope="row">
+                <td scope="col" th:text="${iter.count}"></td>
+                <td scope="col">
+                   <div th:each="fruit : ${box.fruitList}">
+                     <span th:text="${fruit.Type}"></span>
+                   </div>
+                </td>
+                <td>
+                    <div th:each="fruit : ${box.fruitList}">
+                      <span th:text="${fruit.TotalWeight} + 'g'"></span>
+                    </div>
+                </td>
+                <td>
+                    <div th:each="fruit : ${box.fruitList}">
+                        <span th:text="${fruit.Quantity}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div th:each="fruit : ${box.fruitList}">
+                        <span th:text="${#numbers.formatDecimal(fruit.TotalPrice,1,'COMMA', 2, 'POINT')} + '€'"></span>
+                    </div>
+                </td>
+                <td scope="col" th:text="${box.weight} + 'g'"></td>
+                <td scope="col" th:text="${#numbers.formatDecimal(box.PACKAGING_FEE,1,'COMMA', 2, 'POINT')} + '€'"></td>
+                <td scope="col" th:text="${#numbers.formatDecimal(box.price,1,'COMMA', 2, 'POINT')} + '€'"></td>
+            </tr>
+            <tbody>
+        </table>
+    </div>
+
+</html>

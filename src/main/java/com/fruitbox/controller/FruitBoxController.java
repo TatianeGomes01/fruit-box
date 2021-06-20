@@ -4,72 +4,59 @@ import com.fruitbox.model.Box;
 import com.fruitbox.model.Fruit;
 import com.fruitbox.repository.FruitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Controller
 public class FruitBoxController {
 
     @Autowired
     private FruitRepository fruitRepository;
 
+    private List<Box> boxList;
 
-    @RequestMapping("/fruit")
-    public List<Box> sortFruits() {
+    @GetMapping("/fruit")
+    public String sortFruits(Model model) {
 
+        boxList = new ArrayList<>();
         List<Fruit> fruitList = fruitRepository.findAll();
-        List<Box> boxList = new ArrayList();
 
         for (Fruit fruit : fruitList) {
-            boxList.addAll(putFruitsInBox(fruit, getLastBox(boxList)));
+            putFruitsInBox(fruit);
         }
 
-        return boxList;
+        List<Fruit> unmodifiedFruitList = fruitRepository.findAll();
+        model.addAttribute("boxList", boxList);
+        model.addAttribute("fruitList", unmodifiedFruitList);
+
+        return "fruit-box";
     }
 
-    private List<Box> putFruitsInBox(Fruit fruit, Box lastBox) {
+    private void putFruitsInBox(Fruit fruit) {
 
-        List<Box> boxList = new ArrayList();
-
-        if (lastBox.isNewBox()) {
-            if (fruit.getTotalWeight() <= Box.MAX_WEIGHT) {
-                Box box = new Box(fruit);
+        List<Fruit> splitFruitList = fruit.splitFruitByWeight(Box.MAX_WEIGHT);
+        for (Fruit splitFruit : splitFruitList) {
+            Box box = selectBox(splitFruit.getTotalWeight());
+            boolean isNewBox = box.getFruitList().size() == 0;
+            box.addFruit(splitFruit);
+            if (isNewBox) {
                 boxList.add(box);
-            } else {
-                Fruit fruitQttByWeight = fruit.getFruitQttByWeight(Box.MAX_WEIGHT);
-                Box box = new Box(fruitQttByWeight);
-                boxList.add(box);
-                boxList.addAll(putFruitsInBox(fruit, box));
-            }
-        } else {
-            if (fruit.getTotalWeight() <= getLastBoxMaxWeight(lastBox)) {
-                lastBox.addFruit(fruit);
-            }else {
-                putFruitsInBox(fruit, new Box());
             }
         }
-
-        return boxList;
-
     }
 
-    private boolean isSameBox(Fruit fruit, Box lastBox) {
-        return lastBox.getFruitList().size() > 0 && getLastBoxMaxWeight(lastBox) > fruit.getTotalWeight();
-    }
+    private Box selectBox(float weight) {
 
-    private Box getLastBox(List<Box> boxList) {
         if (boxList.size() > 0) {
-            return boxList.get(boxList.size() - 1);
+            Box box = boxList.get(boxList.size() - 1);
+            boolean isBoxFull = box.getWeight() >= 1000 || box.getRemainingCapacity() < weight;
+            return isBoxFull ? new Box() : box;
         } else {
             return new Box();
         }
     }
-
-    private float getLastBoxMaxWeight(Box lastBox) {
-        return Box.MAX_WEIGHT - lastBox.getWeight();
-    }
-
 }
