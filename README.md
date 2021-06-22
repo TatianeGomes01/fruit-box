@@ -1,4 +1,6 @@
 # fruit-box
+In order to access the application start the server in the class FruitBoxAppApplication.java and access the url http://localhost:8080/fruit in the browser
+
 Exercise:
 
 given
