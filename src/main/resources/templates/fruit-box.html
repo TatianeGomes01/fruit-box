@@ -14,16 +14,14 @@
             <tr scope="row">
                 <th scope="col">Type</th>
                 <th scope="col">Weight</th>
-                <th scope="col">Quantity</th>
                 <th scope="col">Unity Price</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="fruit : ${fruitList}" scope="row">
-                <td scope="col" th:text="${fruit.Type}"></td>
-                <td scope="col" th:text="${fruit.Weight} + 'g'"></td>
-                <td scope="col" th:text="${fruit.Quantity}"></td>
-                <td scope="col" th:text="${#numbers.formatDecimal(fruit.Price,1,'COMMA', 2, 'POINT')} + '€'"></td>
+                <td scope="col" th:text="${fruit.type}"></td>
+                <td scope="col" th:text="${fruit.weight} + 'g'"></td>
+                <td scope="col" th:text="${#numbers.formatDecimal(fruit.price,1,'COMMA', 2, 'POINT')} + '€'"></td>
             </tr>
             <tbody>
         </table>
@@ -36,10 +34,9 @@
             <thead>
             <tr>
                 <th scope="col">Box number</th>
-                <th scope="col">Type</th>
-                <th scope="col">Weight</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Total Fruit Price</th>
+                <th scope="col">Fruit type</th>
+                <th scope="col">Fruit weight</th>
+                <th scope="col">Price per fruit</th>
                 <th scope="col">Box weight</th>
                 <th scope="col">Box fee</th>
                 <th scope="col">Box price</th>
@@ -50,22 +47,17 @@
                 <td scope="col" th:text="${iter.count}"></td>
                 <td scope="col">
                    <div th:each="fruit : ${box.fruitList}">
-                     <span th:text="${fruit.Type}"></span>
+                     <span th:text="${fruit.type}"></span>
                    </div>
                 </td>
                 <td>
                     <div th:each="fruit : ${box.fruitList}">
-                      <span th:text="${fruit.TotalWeight} + 'g'"></span>
+                      <span th:text="${fruit.weight} + 'g'"></span>
                     </div>
                 </td>
                 <td>
                     <div th:each="fruit : ${box.fruitList}">
-                        <span th:text="${fruit.Quantity}"></span>
-                    </div>
-                </td>
-                <td>
-                    <div th:each="fruit : ${box.fruitList}">
-                        <span th:text="${#numbers.formatDecimal(fruit.TotalPrice,1,'COMMA', 2, 'POINT')} + '€'"></span>
+                        <span th:text="${#numbers.formatDecimal(fruit.price,1,'COMMA', 2, 'POINT')} + '€'"></span>
                     </div>
                 </td>
                 <td scope="col" th:text="${box.weight} + 'g'"></td>

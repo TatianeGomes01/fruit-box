@@ -15,7 +15,6 @@ public class Box {
     public Box(Fruit fruit) {
 
         this.fruitList.add(fruit);
-        this.weight += fruit.getWeight() * fruit.getQuantity();
     }
 
     public Box() {
@@ -30,15 +29,13 @@ public class Box {
     }
 
     public float getPrice() {
-        for (Fruit fruit : fruitList) {
-            price += fruit.getTotalPrice();
-        }
         return price + PACKAGING_FEE;
     }
 
     public void addFruit(Fruit fruit) {
         this.fruitList.add(fruit);
-        this.weight += fruit.getWeight() * fruit.getQuantity();
+        this.weight += fruit.getWeight();
+        this.price += fruit.getPrice();
     }
 
     public float getRemainingCapacity(){

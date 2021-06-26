@@ -38,14 +38,16 @@ public class FruitBoxController {
 
     private void putFruitsInBox(Fruit fruit) {
 
-        List<Fruit> splitFruitList = fruit.splitFruitByWeight(Box.MAX_WEIGHT);
-        for (Fruit splitFruit : splitFruitList) {
-            Box box = selectBox(splitFruit.getTotalWeight());
-            boolean isNewBox = box.getFruitList().size() == 0;
-            box.addFruit(splitFruit);
-            if (isNewBox) {
-                boxList.add(box);
-            }
+//      TODO: Check what happens when the fruit has more weight than the box capacity
+        if (fruit.getWeight() > Box.MAX_WEIGHT) {
+            fruit.setWeight(Box.MAX_WEIGHT);
+        }
+
+        Box box = selectBox(fruit.getWeight());
+        boolean isNew = box.getFruitList().isEmpty();
+        box.addFruit(fruit);
+        if(isNew) {
+            boxList.add(box);
         }
     }
 
