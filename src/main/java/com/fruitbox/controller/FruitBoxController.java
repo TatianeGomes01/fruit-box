@@ -29,9 +29,8 @@ public class FruitBoxController {
             putFruitsInBox(fruit);
         }
 
-        List<Fruit> unmodifiedFruitList = fruitRepository.findAll();
         model.addAttribute("boxList", boxList);
-        model.addAttribute("fruitList", unmodifiedFruitList);
+        model.addAttribute("fruitList", fruitList);
 
         return "fruit-box";
     }
